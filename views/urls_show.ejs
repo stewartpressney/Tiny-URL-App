@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+      <style>
+
+        body {
+          padding-top: 80px;
+          font-family: 'Montserrat', sans-serif;
+        }
+
+        .container .jumbotron h1 {
+          font-family: 'Arvo', sans-serif;
+        }
+        .container .jumbotron h4 {
+          font-family: 'Montserrat', sans-serif;
+        }
+
+        button {
+          font-family: 'Arvo', sans-serif;
+        }
+
+        input, button, select, textarea {
+          font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+
+    <title>Tiny App</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+</head>
+
+
+<body class="container">
+<div class="jumbotron">
+  <header>
+    <% include ./partials/_header %>
+  </header>
+
+    <ul>
+      <h4>
+        <%= `${shortURL}   :  ${urls[shortURL]}` %>
+      </h4>
+    </ul>
+
+</div>
+
+</body>
+
+</html>
