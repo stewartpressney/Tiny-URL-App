@@ -2,78 +2,75 @@
 <html>
 
 <head>
+    <style>
+    body {
+        padding-top: 80px;
+        font-family: 'Montserrat', sans-serif;
+        color: darkslategrey;
+    }
 
-      <style>
+    a {
+        font-family: 'Montserrat', sans-serif;
+        color: white;
+        text-decoration: none;
+    }
 
-        body {
-          padding-top: 80px;
-          font-family: 'Montserrat', sans-serif;
-          color: darkslategrey;
-        }
+    .container .jumbotron {
+        background-color: #1B3D57;
+    }
 
-        a {
-          font-family: 'Montserrat', sans-serif;
-          color: white;
-          text-decoration: none;
-        }
+    .container .jumbotron h1 {
+        font-family: 'Arvo', sans-serif;
+        color: white;
+    }
 
-        .container .jumbotron {
-          background-color: #1B3D57;
-        }
+    .container .jumbotron h4 {
+        font-family: 'Montserrat', sans-serif;
+        color: white;
+    }
 
-        .container .jumbotron h1 {
-          font-family: 'Arvo', sans-serif;
-          color: white;
-        }
-        .container .jumbotron h4 {
-          font-family: 'Montserrat', sans-serif;
-          color: white;
-        }
+    input,
+    button,
+    select,
+    textarea {
+        font-family: 'Montserrat', sans-serif;
+    }
 
-        input, button, select, textarea {
-          font-family: 'Montserrat', sans-serif;
-        }
-
-         input, button, select, textarea {
-          font-family: 'Montserrat', sans-serif;
-        }
-
-
+    input,
+    button,
+    select,
+    textarea {
+        font-family: 'Montserrat', sans-serif;
+    }
     </style>
-
-
     <title>Tiny App</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-
-
 </head>
+
 <body class="container">
-<div class="jumbotron">
-   <header>
-  </header>
-  <h1>Welcome to Tiny App</h1>
-  <h4>We shorten links so your tiny brain can remember them.</h4>
-      <ul style="list-style: none;">
-        <% for(let shortURL in urls) { %>
-          <li style="padding-top: 20px;">
-            <span>
+    <div class="jumbotron">
+        <header>
+        </header>
+        <h1>Welcome to Tiny App</h1>
+        <h4>We shorten links so your tiny brain can remember them.</h4>
+        <ul style="list-style: none;">
+            <% for(let shortURL in urls) { %>
+                <li style="padding-top: 20px;">
+                    <span>
             <a href="<%= `http://localhost:8080/urls/${shortURL}` %>"><%= `${shortURL}   :  ${urls[shortURL]}` %></a>
 
             <form style="display: inline; float: right;" method="POST" action="urls/<%= `${shortURL}` %>/delete"><button><a>Delete</button></form>
 
-            <form style="display: inline; float: right; margin-right: 10px;" method="POST" action="/urls/<%= `${shortURL}` %>/delete"><button><a href="http://localhost:8080/urls/new">Edit</a></button></form>
+            <form style="display: inline; float: right; margin-right: 10px;" method="POST" action="/urls/<%= `${shortURL}`%>"><button><a href="http://localhost:8080/urls/<%= `${shortURL}` %>">Edit</a></button></form>
 
             </span>
-          </li>
-        <% }; %>
-      </ul>
-
-    <button style="margin-top: 20px"><a href="http://localhost:8080/urls/new">Shorten A Link</a>
-    </button>
-
-  </div>
-
+                </li>
+                <% }; %>
+        </ul>
+        <button style="margin-top: 20px"><a href="http://localhost:8080/urls/new">Shorten A Link</a>
+        </button>
+    </div>
 </body>
 
 </html>

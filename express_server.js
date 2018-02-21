@@ -32,10 +32,18 @@ app.get("/urls/new", (request, response) => {
   response.render("urls_new");
 });
 
+//delete
 app.post("/urls/:shortURL/delete", (request, response) =>{
   let key = request.params.shortURL
   delete urlDatabase[key]
   console.log(key)
+  response.redirect("/urls");
+});
+
+//update
+app.post("/urls/:shortURL", (request, response) =>{
+  let key = request.params.shortURL
+  urlDatabase[key] = request.body.longURL;
   response.redirect("/urls");
 });
 

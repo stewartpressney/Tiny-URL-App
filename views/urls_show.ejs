@@ -2,69 +2,68 @@
 <html>
 
 <head>
+    <style>
+    body {
+        padding-top: 80px;
+        font-family: 'Montserrat', sans-serif;
+        color: darkslategrey;
+    }
 
-      <style>
+    a {
+        font-family: 'Montserrat', sans-serif;
+        color: white;
+        text-decoration: none;
+    }
 
-        body {
-          padding-top: 80px;
-          font-family: 'Montserrat', sans-serif;
-          color: darkslategrey;
-        }
+    .container .jumbotron {
+        background-color: #1B3D57;
+    }
 
-        a {
-          font-family: 'Montserrat', sans-serif;
-          color: white;
-          text-decoration: none;
-        }
+    .container .jumbotron h1 {
+        font-family: 'Arvo', sans-serif;
+        color: white;
+    }
 
-        .container .jumbotron {
-          background-color: #1B3D57;
-        }
-
-        .container .jumbotron h1 {
-          font-family: 'Arvo', sans-serif;
-          color: white;
-        }
-        .container .jumbotron h2 {
-          font-family: 'Montserrat', sans-serif;
-          color: white;
-        }
+    .container .jumbotron h2 {
+        font-family: 'Montserrat', sans-serif;
+        color: white;
+    }
 
 
-        .container .jumbotron h4 {
-          font-family: 'Montserrat', sans-serif;
-          color: white;
-        }
+    .container .jumbotron h4 {
+        font-family: 'Montserrat', sans-serif;
+        color: white;
+    }
 
-        input, button, select, textarea {
-          font-family: 'Montserrat', sans-serif;
-        }
-
+    input,
+    button,
+    select,
+    textarea {
+        font-family: 'Montserrat', sans-serif;
+    }
     </style>
-
     <title>Tiny App</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-
 </head>
 
-
 <body class="container">
-<div class="jumbotron">
-  <header>
-    <% include ./partials/_header %>
-  </header>
-
-    <ul>
-  <h2>Stick this in Twitter why dont ya!</h2>
-
-      <h4>
+    <div class="jumbotron">
+        <header>
+            <% include ./partials/_header %>
+        </header>
+        <ul>
+            <h2>Stick this in Twitter why dont ya!</h2>
+            <h4>
         <%= `${shortURL}   :  ${url}` %>
       </h4>
-    </ul>
-
-</div>
-
+            <h4 style="margin:40px;">Reassign This URL:</h4>
+            <form action="/urls/<%= `${shortURL}` %>" method="POST">
+                <input id="longURL" type="text" name="longURL" placeholder="Enter a URL" style="width: 300px">
+                <input type="submit" value="Submit">
+            </form>
+        </ul>
+    </div>
 </body>
 
 </html>
