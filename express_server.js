@@ -32,12 +32,23 @@ app.get("/urls/new", (request, response) => {
   response.render("urls_new");
 });
 
+app.post("/urls/:shortURL/delete", (request, response) =>{
+  let key = request.params.shortURL
+  delete urlDatabase[key]
+  console.log(key)
+  response.redirect("/urls");
+});
+
 
 //take in string and post it to the URLdatabase object
 app.post("/urls", (request, response) => {
-  urlDatabase[generateRandomString()] = request;
-  console.log(request.body);
-  response.redirect("urls/:id");
+    let templateVars = {
+    urls: urlDatabase
+  };
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = request.body.longURL;
+  console.log(urlDatabase);
+  response.redirect(`urls/${shortURL}`);
 });
 
 app.get("/urls", (request, response) => {
@@ -48,15 +59,16 @@ app.get("/urls", (request, response) => {
 });
 
 app.get("/urls/:id", (request, response) => {
+  let key = request.params.id
   let templateVars = {
     shortURL: request.params.id,
     urls: urlDatabase,
-    port: PORT
+    url: urlDatabase[key]
   };
   response.render("urls_show", templateVars);
 });
 
 
-app.listen(PORT, () =>{
+app.listen(PORT, () => {
   console.log(`Example App Docked at port ${PORT} Capt'n`);
 });

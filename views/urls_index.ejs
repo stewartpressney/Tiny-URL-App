@@ -33,6 +33,12 @@
         input, button, select, textarea {
           font-family: 'Montserrat', sans-serif;
         }
+
+         input, button, select, textarea {
+          font-family: 'Montserrat', sans-serif;
+        }
+
+
     </style>
 
 
@@ -45,19 +51,25 @@
 <body class="container">
 <div class="jumbotron">
    <header>
-     <% include ./partials/_header %>
   </header>
   <h1>Welcome to Tiny App</h1>
   <h4>We shorten links so your tiny brain can remember them.</h4>
-      <ul>
+      <ul style="list-style: none;">
         <% for(let shortURL in urls) { %>
-          <li>
+          <li style="padding-top: 20px;">
+            <span>
             <a href="<%= `http://localhost:8080/urls/${shortURL}` %>"><%= `${shortURL}   :  ${urls[shortURL]}` %></a>
+
+            <form style="display: inline; float: right;" method="POST" action="urls/<%= `${shortURL}` %>/delete"><button><a>Delete</button></form>
+
+            <form style="display: inline; float: right; margin-right: 10px;" method="POST" action="/urls/<%= `${shortURL}` %>/delete"><button><a href="http://localhost:8080/urls/new">Edit</a></button></form>
+
+            </span>
           </li>
         <% }; %>
       </ul>
 
-    <button><a href="http://localhost:8080/urls/new">Shorten A Link</a>
+    <button style="margin-top: 20px"><a href="http://localhost:8080/urls/new">Shorten A Link</a>
     </button>
 
   </div>

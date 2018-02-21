@@ -11,6 +11,12 @@
           color: darkslategrey;
         }
 
+        a {
+          font-family: 'Montserrat', sans-serif;
+          color: white;
+          text-decoration: none;
+        }
+
         .container .jumbotron {
           background-color: #1B3D57;
         }
@@ -24,11 +30,7 @@
           color: white;
         }
 
-        button {
-          font-family: 'Arvo', sans-serif;
-        }
-
-        input, button, select, textarea {
+        input, button, select, {
           font-family: 'Montserrat', sans-serif;
         }
     </style>
@@ -42,7 +44,7 @@
     <div class="jumbotron">
     <% include partials/_header %>
     <form action="/urls" method="POST" style="margin:40px;">
-      <input id="longURL" type="text" name="longURL" placeholder="Feed me a URL" style="width: 300px">
+      <input id="longURL" type="text" name="longURL" placeholder="Enter a URL" style="width: 300px">
       <input type="submit" value="Submit">
     </form>
   </div>
