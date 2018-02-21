@@ -26,33 +26,19 @@
         }
     </style>
 
-
     <title>Tiny App</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
-
 </head>
-<body class="container">
-<div class="jumbotron">
-   <header>
-     <% include ./partials/_header %>
-  </header>
-  <h1>Welcome to Tiny App</h1>
-  <h4>We shorten links so your tiny brain can remember them.</h4>
-      <ul>
-        <% for(let shortURL in urls) { %>
-          <li>
-            <a href="<%= `http://localhost:8080/urls/${shortURL}` %>"><%= `${shortURL}   :  ${urls[shortURL]}` %></a>
-          </li>
-        <% }; %>
-      </ul>
-
-    <button><a href="http://localhost:8080/urls/new">Shorten A Link</a>
-    </button>
-
+  <body class="container" style="font-size:20px;">
+    <div class="jumbotron">
+    <% include partials/_header %>
+    <form action="/urls" method="POST" style="margin:40px;">
+      <label for="longURL">Enter a URL:</label>
+      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+      <input type="submit" value="Submit">
+    </form>
   </div>
-
-</body>
-
+  </body>
 </html>
