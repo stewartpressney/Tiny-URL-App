@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser')
 
 app.set("view engine", "ejs");
 app.use(cookieParser())
+app.use(bodyParser.urlencoded({extended: true}));
 
 const urlDatabase = {
   "1234" : "http://www.lighthouselabs.ca",
@@ -23,13 +24,18 @@ function generateRandomString() {
   return tinyURL;
 }
 
+//map the long URL to the Short URL
 app.get("/u/:shortURL", (request, response) => {
-  let longURL = urlDatabase[request.params.shortURL];
-  response.redirect(longURL);
+// if (longURL[6] === '/'){
+    let longURL = urlDatabase[request.params.shortURL];
+    response.redirect(longURL);
+  // } else {
+  //     let longURL = 'http://' + urlDatabase[request.params.shortURL];
+  //     response.redirect(longURL);
+  // }
 });
 
-app.use(bodyParser.urlencoded({extended: true}));
-
+//Show New URL Page
 app.get("/urls/new", (request, response) => {
   let templateVars = {
     username: request.cookies["usernameCookie"]
@@ -37,14 +43,14 @@ app.get("/urls/new", (request, response) => {
   response.render("urls_new", templateVars);
 });
 
-//delete
+//delete URL
 app.post("/urls/:shortURL/delete", (request, response) =>{
   let key = request.params.shortURL
   delete urlDatabase[key]
   response.redirect("/urls");
 });
 
-//update
+//update URL
 app.post("/urls/:shortURL", (request, response) =>{
   let key = request.params.shortURL
   urlDatabase[key] = request.body.longURL;
@@ -71,13 +77,13 @@ app.post("/logout", (request, response) =>{
 });
 
 
-
 //take in string and post it to the URLdatabase object
 app.post("/urls", (request, response) => {
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = request.body.longURL;
   response.redirect(`urls/${shortURL}`);
 });
+
 
 //get homepage
 app.get("/urls", (request, response) => {
