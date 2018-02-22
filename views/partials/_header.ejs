@@ -1,6 +1,27 @@
 <nav class="navbar navbar-defalt" role="navigation">
   <span style="float: right;">
-      <form style="display: inline;" method="POST" action="/login"><p style="display: inline; color: white; margin-right: 10px; ">Hello, <%= username %></p><input type="text" name="username" style="margin-right: 10px; width: 160px;"><button type="Submit"><a>Login</a></button></form></span>
+
+    <% if(username){ %>
+
+       <form style="display: inline;" method="POST" action="/logout">
+        <p style="display: inline; color: white; margin-right: 10px; ">Hello, <%= username %></p>
+        <button type="Submit">
+          <a>Logout</a>
+        </button>
+      </form>
+
+    <% } else{ %>
+
+     <form style="display: inline;" method="POST" action="/login">
+        <input type="text" name="username" style="margin-right: 10px; width: 160px;">
+        <button type="Submit">
+          <a>Login</a>
+        </button>
+      </form>
+
+      <% } %>
+
+    </span>
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="http://localhost:8080/urls">
@@ -8,3 +29,4 @@
       </a>
   </div>
 </nav>
+

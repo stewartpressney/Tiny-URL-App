@@ -34,7 +34,7 @@ app.get("/urls/new", (request, response) => {
   let templateVars = {
     username: request.cookies["usernameCookie"]
   };
-  response.render("urls_new");
+  response.render("urls_new", templateVars);
 });
 
 //delete
@@ -59,6 +59,18 @@ app.post("/login", (request, response) =>{
   console.log(username)
   response.redirect("/urls");
 });
+
+
+//logout
+app.post("/logout", (request, response) =>{
+    let templateVars = {
+    username: request.cookies["usernameCookie"],
+  };
+  response.clearCookie('usernameCookie');
+  //console.log(username)
+  response.redirect("/urls");
+});
+
 
 
 //take in string and post it to the URLdatabase object
