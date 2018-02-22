@@ -6,33 +6,39 @@
       <style>
 
         body {
-          padding-top: 80px;
-          font-family: 'Montserrat', sans-serif;
-          color: darkslategrey;
-        }
+        padding-top: 80px;
+        font-family: 'Montserrat', sans-serif;
+        color: darkslategrey;
+    }
 
-        a {
-          font-family: 'Montserrat', sans-serif;
-          color: white;
-          text-decoration: none;
-        }
+    a {
+        font-family: 'Montserrat', sans-serif;
+        color: white;
+        text-decoration: none;
+    }
 
-        .container .jumbotron {
-          background-color: #1B3D57;
-        }
+    .container .jumbotron {
+        background-color: #1B3D57;
+    }
 
-        .container .jumbotron h1 {
-          font-family: 'Arvo', sans-serif;
-          color: white;
-        }
-        .container .jumbotron h4 {
-          font-family: 'Montserrat', sans-serif;
-          color: white;
-        }
+    .container .jumbotron h1 {
+        font-family: 'Arvo', sans-serif;
+        color: white;
+    }
 
-        input, button, select, {
-          font-family: 'Montserrat', sans-serif;
-        }
+    .container .jumbotron h4 {
+        font-family: 'Montserrat', sans-serif;
+        color: white;
+    }
+
+    span,
+    input,
+    button,
+    select,
+    textarea {
+        font-family: 'Montserrat', sans-serif;
+    }
+
     </style>
 
     <title>Tiny App</title>
@@ -40,11 +46,11 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
 </head>
-  <body class="container" style="font-size:20px; border-radius: 5px;">
+  <body class="container" style="border-radius: 5px;">
     <div class="jumbotron">
-    <% include partials/_header %>
+    <% include ./partials/_header %>
     <form action="/urls" method="POST" style="margin:40px;">
-      <input id="longURL" type="text" name="longURL" placeholder="Enter a URL" style="width: 300px">
+      <input id="longURL" type="text" name="longURL" placeholder="Enter a URL">
       <input type="submit" value="Submit">
     </form>
   </div>
