@@ -13,6 +13,20 @@ const urlDatabase = {
   "2134" : "http://www.google.com"
 };
 
+let users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
+
+
 //generate random number for URL ID
 function generateRandomString() {
   let tinyURL = "";
@@ -38,7 +52,8 @@ app.get("/u/:shortURL", (request, response) => {
 //Show New URL Page
 app.get("/urls/new", (request, response) => {
   let templateVars = {
-    username: request.cookies["usernameCookie"]
+    email: response.cookie["user_emailCookie"],
+    id: response.cookie["user_IDCookie"]
   };
   response.render("urls_new", templateVars);
 });
@@ -57,11 +72,33 @@ app.post("/urls/:shortURL", (request, response) =>{
   response.redirect("/urls");
 });
 
+
+//get registration page
+app.get("/register", (request, response) => {
+  response.render('register');
+});
+
+
+//post registration info
+app.post("/register", (request, response) => {
+  let email = request.body.email
+  let key = generateRandomString()
+  let user = key
+    key.id = key
+    key.email = request.body.email
+    key.password = request.body.password
+  users[key] = user
+  response.cookie('user_emailCookie', email)
+  response.cookie('user_IDCookie', key)
+  response.redirect("/urls");
+});
+
+
 //login
 app.post("/login", (request, response) =>{
-  let username = request.body.username
-  response.cookie('usernameCookie', username)
-  console.log(username)
+  let email = request.body.email
+  response.cookie('user_emailCookie', email)
+  console.log(request)
   response.redirect("/urls");
 });
 
@@ -69,11 +106,13 @@ app.post("/login", (request, response) =>{
 //logout
 app.post("/logout", (request, response) =>{
     let templateVars = {
-    username: request.cookies["usernameCookie"],
+    email: response.cookie["user_emailCookie"],
+    id: response.cookie["user_IDCookie"]
   };
-  response.clearCookie('usernameCookie');
+  response.clearCookie('user_emailCookie');
+  response.clearCookie('user_IDCookie');
   //console.log(username)
-  response.redirect("/urls");
+  response.redirect("/register");
 });
 
 
@@ -88,10 +127,12 @@ app.post("/urls", (request, response) => {
 //get homepage
 app.get("/urls", (request, response) => {
   let templateVars = {
-    username: request.cookies["usernameCookie"],
-    urls: urlDatabase
+    //username: request.cookies["usernameCookie"],
+    urls: urlDatabase,
+    email: response.cookie["user_emailCookie"],
+    id: response.cookie["user_IDCookie"]
   };
-  console.log(templateVars)
+  console.log(users)
   response.render('urls_index', templateVars);
 });
 
@@ -100,7 +141,7 @@ app.get("/urls", (request, response) => {
 app.get("/urls/:id", (request, response) => {
   let key = request.params.id
   let templateVars = {
-    username: request.cookies["usernameCookie"],
+    //username: request.cookies["usernameCookie"],
     shortURL: request.params.id,
     urls: urlDatabase,
     url: urlDatabase[key]

@@ -1,10 +1,10 @@
 <nav class="navbar navbar-defalt" role="navigation">
   <span style="float: right;">
 
-    <% if(username){ %>
+    <% if(email){ %>
 
        <form style="display: inline;" method="POST" action="/logout">
-        <h4 style="display: inline; color: white; margin-right: 10px; ">Hello, <%= username %></h4>
+        <h4 style="display: inline; color: white; margin-right: 10px; ">Hello, <%= email %></h4>
         <button type="Submit">
           <a>Logout</a>
         </button>
