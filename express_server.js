@@ -41,7 +41,6 @@ app.get("/urls/new", (request, response) => {
 app.post("/urls/:shortURL/delete", (request, response) =>{
   let key = request.params.shortURL
   delete urlDatabase[key]
-  console.log(key)
   response.redirect("/urls");
 });
 
@@ -77,7 +76,6 @@ app.post("/logout", (request, response) =>{
 app.post("/urls", (request, response) => {
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = request.body.longURL;
-  console.log(urlDatabase);
   response.redirect(`urls/${shortURL}`);
 });
 
