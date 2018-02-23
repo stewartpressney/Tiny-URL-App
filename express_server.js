@@ -29,6 +29,9 @@ let users = {
 }
 
 
+
+
+
 //generate random number for URL ID
 function generateRandomString() {
   let tinyURL = "";
@@ -39,6 +42,9 @@ function generateRandomString() {
 
   return tinyURL;
 }
+
+
+
 
 //map the long URL to the Short URL
 app.get("/u/:shortURL", (request, response) => {
@@ -51,14 +57,24 @@ app.get("/u/:shortURL", (request, response) => {
   // }
 });
 
+
+
+
 //Show New URL Page
 app.get("/urls/new", (request, response) => {
+  var userCookie = request.cookies["user_IDCookie"];
+  var user = users[userCookie];
   let templateVars = {
     email: request.cookies["user_emailCookie"],
-    id: response.cookie["user_IDCookie"]
+    id: response.cookie["user_IDCookie"],
+    user: user
   };
   response.render("urls_new", templateVars);
 });
+
+
+
+
 
 //delete URL
 app.post("/urls/:shortURL/delete", (request, response) =>{
@@ -66,6 +82,9 @@ app.post("/urls/:shortURL/delete", (request, response) =>{
   delete urlDatabase[key]
   response.redirect("/urls");
 });
+
+
+
 
 //update URL
 app.post("/urls/:shortURL", (request, response) =>{
@@ -75,10 +94,14 @@ app.post("/urls/:shortURL", (request, response) =>{
 });
 
 
+
+
 //get registration page
 app.get("/register", (request, response) => {
   response.render('register');
 });
+
+
 
 
 //post registration info
@@ -114,6 +137,9 @@ app.post("/register", (request, response) => {
 });
 
 
+
+
+
 //login
 app.post("/login", (request, response) =>{
   let email = request.body.email
@@ -138,6 +164,9 @@ app.post("/login", (request, response) =>{
 });
 
 
+
+
+
 //logout
 app.post("/logout", (request, response) =>{
     let templateVars = {
@@ -151,6 +180,9 @@ app.post("/logout", (request, response) =>{
 });
 
 
+
+
+
 //take in string and post it to the URLdatabase object
 app.post("/urls", (request, response) => {
   let shortURL = generateRandomString();
@@ -159,22 +191,28 @@ app.post("/urls", (request, response) => {
 });
 
 
+
+
+
 //get homepage
 app.get("/urls", (request, response) => {
-  let templateVars = {
-    //username: request.cookies["usernameCookie"],
+  var userCookie = request.cookies["user_IDCookie"];
 
-    urls: urlDatabase,
-    user: users[request.cookies.user_IDCookie]
+  var user = users[userCookie];
+  console.log(user);
+
+  let templateVars = {
+      //username: request.cookies["usernameCookie"],
+      urls: urlDatabase,
+      user: user
+
     //id: response.cookie["user_IDCookie"]
-  };
-  //console.log(users)
-  console.log(templateVars)
-  console.log('Cookies: ', request.cookies)
-  console.log('Cookies: ', request.cookie)
-  console.log(users)
-  response.render("urls_index", templateVars);
+    };
+    response.render("urls_index", templateVars);
 });
+
+
+
 
 
 //get detail page
@@ -184,7 +222,8 @@ app.get("/urls/:id", (request, response) => {
     //username: request.cookies["usernameCookie"],
     shortURL: request.params.id,
     urls: urlDatabase,
-    url: urlDatabase[key]
+    url: urlDatabase[key],
+    user: users[request.cookies.user_IDCookie]
   };
   response.render("urls_show", templateVars);
 });

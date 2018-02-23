@@ -63,8 +63,19 @@
                 </li>
                 <% }; %>
         </ul>
+
+        <% if(!user){ %>
+
+        <button style="margin-top: 20px"><a href="http://localhost:8080/register">Shorten A Link</a>
+        </button>
+
+        <% } else{ %>
+
         <button style="margin-top: 20px"><a href="http://localhost:8080/urls/new">Shorten A Link</a>
         </button>
+
+        <% } %>
+
     </div>
 </body>
 
