@@ -1,21 +1,25 @@
 <nav class="navbar navbar-defalt" role="navigation">
   <span style="float: right;">
 
-    <% if(username){ %>
+    <% if(!user.email){ %>
 
-       <form style="display: inline;" method="POST" action="/logout">
-        <h4 style="display: inline; color: white; margin-right: 10px; ">Hello, <%= username %></h4>
+      <form>
         <button type="Submit">
-          <a>Logout</a>
+          <a href="http://localhost:8080/register">Sign In</a>
+        </button>
+
+        <button type="Submit">
+          <a href="http://localhost:8080/register">Register</a>
         </button>
       </form>
 
+
     <% } else{ %>
 
-     <form style="display: inline;" method="POST" action="/login">
-        <input type="text" name="username" style="margin-right: 10px; width: 160px;">
+      <form style="display: inline;" method="POST" action="/logout">
+        <h4 style="display: inline; color: white; margin-right: 10px; ">Hello, <%= user.email %></h4>
         <button type="Submit">
-          <a>Login</a>
+          <a>Logout</a>
         </button>
       </form>
 
