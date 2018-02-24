@@ -101,6 +101,7 @@ app.get("/urls/new", (request, response) => {
 
 //delete URL
 app.post("/urls/:shortURL/delete", (request, response) => {
+    console.log("im in post delete");
   if (checkforUser()) {
     delete urlDatabase[request.params.shortURL]
     response.redirect("/urls");
