@@ -54,21 +54,21 @@
                 if (user){ %>
                 <li style="padding-top: 20px;">
                     <span>
-            <a href="<%= `http://localhost:8080/urls/${key.shortURL}` %>">
+            <a href="<%= `http://localhost:8080/urls/${key}` %>">
                 <%= `${key}   :  ${urls[key].longURL}` %></a>
 
             <form style="display: inline; float: right;" method="POST" action="urls/<%= `${key}` %>/delete"><button><a>Delete</button></form>
 
-            <form style="display: inline; float: right; margin-right: 10px;" method="POST" action="/urls/<%= `${key.shortURL}`%>"><button><a href="http://localhost:8080/urls/<%= `${key.shortURL}` %>">Edit</a></button></form>
+            <!-- <form style="display: inline; float: right; margin-right: 10px;" method="POST" action="/urls/<%= `${key.shortURL}`%>"><button><a href="http://localhost:8080/urls/<%= `${urls.key}` %>">Edit</a></button></form> -->
             <% }; %>
             </span>
                 </li>
                 <% }; %>
         </ul>
-        <% if(!user){ %>
+        <% if (!user) { %>
             <button style="margin-top: 20px"><a href="http://localhost:8080/register">Shorten A Link</a>
             </button>
-            <% } else{ %>
+            <% } else { %>
                 <button style="margin-top: 20px"><a href="http://localhost:8080/urls/new">Shorten A Link</a>
                 </button>
                 <% } %>

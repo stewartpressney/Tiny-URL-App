@@ -16,7 +16,7 @@ app.use(cookieSession({
 }))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(flash());
-app.use(cookieParser())
+//app.use(cookieParser())
 
 
 let users = {
@@ -83,11 +83,13 @@ app.get("/u/:shortURL", (request, response) => {
 
 //Show New URL Page
 app.get("/urls/new", (request, response) => {
-    var userCookie = request.session.user_id = "user_IDCookie";
+    var userCookie = request.session.user_id; //this is not a complete object
+    //var user = userCookie.user;
     var user = users[userCookie];
+
     let templateVars = {
-        email: userCookie,
-        id: userCookie,
+        email: user.email,
+        id: user.id,
         user: user
     };
     response.render("urls_new", templateVars);
@@ -113,20 +115,30 @@ app.post("/urls/:shortURL/delete", (request, response) => {
 //update URL
 app.post("/urls/:shortURL", (request, response) => {
     let key = request.params.shortURL
-    var userCookie = request.session.user_id = "user_IDCookie";
+    var userCookie = request.session.user_id;
+    var user = users[userCookie];
+    var urls = getUserURL(user);
+
     var tempObject = {
-        shortURL: key,
+        shortURL: urls[key],
         longURL: request.body.longURL,
-        userId: userCookie,
-        // urls: urlDatabase
+        user: user,
+        urls: urls
     };
-    urlDatabase[key] = tempObject;
+
+
+    console.log(request.params.shortURL)
+    urlDatabase[key].longURL = request.body.longURL;
+    var templateVars = {
+
+        user: user,
+        urls: urls
+    };
+
     //console.log(urlDatabase);
     // urlDatabase[key] = request.body.longURL;
-    response.redirect("/urls");
+    response.render('urls_index', templateVars);
 });
-
-
 
 
 //get registration page
@@ -154,21 +166,27 @@ app.post("/register", (request, response) => {
         email: request.body.email,
         password: hashedPassword
     };
-    console.log(newUser)
-    for (user in users) {}
+    //console.log(newUser)
+    for (var user in users) {}
     const isUser = checkforUser(request.body.email)
     // if (user.email !== email){
     if (isUser) {
         response.send('You Are Already Registered.');
         response.status(400);
     }
-    // if (request.body.email === "" || request.body.password === "") {
-    //     response.send('You Shall Not Pass -____-');
-    //     response.status(400);
+    if (request.body.email === "" || request.body.password === "") {
+        response.send('You Shall Not Pass -____-');
+        response.status(400);
+    }
     else {
+      let templateVars = {
+        urls: urlDatabase,
+        user: request.session.user_id
+      }
         users[key] = newUser
-        request.session.user_id = "user_IDCookie";
-        response.redirect("urls");
+        request.session.user_id = key;
+        response.redirect("/urls")
+        response.render(templateVars);
     }
     //users[key] = newUser;
     //response.cookie('user_emailCookie', email);
@@ -226,15 +244,17 @@ app.post("/logout", (request, response) => {
 //take in string and post it to the URLdatabase object
 app.post("/urls", (request, response) => {
     let shortURL = generateRandomString();
-    var userCookie = request.session.user_id = "user_IDCookie";
+    var userCookie = request.session.user_id;
+    var user = users[userCookie];
+
     var tempObject = {
         shortURL: shortURL,
         longURL: request.body.longURL,
-        userId: userCookie,
-        //urls: urlDatabase[key].url
+        userId: request.session.user_id,
+        //user: user
+        urls: urlDatabase//[key].url
     };
     urlDatabase[shortURL] = tempObject;
-    //console.log(urlDatabase)
     response.redirect(`urls/${shortURL}`);
 });
 
@@ -253,15 +273,15 @@ function getUserURL(user) {
 
 //get homepage
 app.get("/urls", (request, response) => {
-    var userCookie = request.session.user_id = "user_IDCookie";
+    var userCookie = request.session.user_id;
     var user = users[userCookie];
     var urls = urlDatabase;
+    var templateVars;
     //console.log(userCookie)
     if (user) {
         var urls = getUserURL(user);
         //console.log('urls '+ urls)
-
-        let templateVars = {
+        templateVars = {
             urls: urls,
             user: user
         };
@@ -272,36 +292,30 @@ app.get("/urls", (request, response) => {
 });
 
 
-// const urlDatabase = {
-//   "2134" : {
-//     shortURL: "2134",
-//     longURL: "http://www.google.com",
-//     userId: "userRandomID"
-//   }
-// }
-
-
 
 //get detail page
 app.get("/urls/:id", (request, response) => {
-    //console.log("in the /urls/:id get ");
-    var userCookie = request.session.user_id = "user_IDCookie";
-    var user = users[userCookie];
 
+    //READING THE COOKIE FROM THE BROWSER.
+    var userCookie = request.session.user_id;
+    //GET THE COMPLETE USER OBJECT FROM THE USERS DB WITH THE HELP OF COOKIE.
+    var user = users[userCookie];
+    var templateVars;
+
+    var flag = false;
     //console.log(user)
-    if (user) {
-        var flag = false;
-        var shortKey;
+    if (user) { //if the user exists or logged in
         for (var key in urlDatabase) {
             if (urlDatabase[key].userId === user.id) {
                 flag = true;
-                shortKey = key;
+                //shortKey = key;
                 break;
             }
-        }
+        } // for loop closes
         if (flag) {
-            var tempObject = urlDatabase[key];
-            let templateVars = {
+            var tempObject = urlDatabase[request.params.id];
+            templateVars = {
+                //key: urlDatabase[key],
                 urls: tempObject,
                 shortURL: tempObject.shortURL,
                 longURL: tempObject.longURL,
@@ -309,10 +323,18 @@ app.get("/urls/:id", (request, response) => {
             };
             response.render("urls_show", templateVars);
         } else {
-            res.send("Error, you cannot Access this URL");
+            response.send("Error, you cannot Access this URL");
         }
-    } else {
-        response.render("urls_index")
+    } else { // if the user is not logged in
+        templateVars = {
+                // urls: tempObject,
+
+                shortURL: tempObject.shortURL,
+                longURL: tempObject.longURL,
+                urls: urlDatabase,
+                user: ""
+        };
+        response.render("urls_index", templateVars)
     }
 });
 
