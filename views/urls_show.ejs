@@ -55,7 +55,14 @@
         <ul>
             <h2>Stick this in Twitter why dont ya!</h2>
             <h4>
-        <%= `${shortURL}   :  ${url}` %>
+
+         <% if (user){ %>
+
+            <%= shortURL %>    :  <%= longURL %>
+
+        <% }; %>
+
+
       </h4>
             <h4 style="margin-top:40px;">Reassign This Tiny URL:</h4>
             <form action="/urls/<%= `${shortURL}` %>" method="POST">
