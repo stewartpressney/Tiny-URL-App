@@ -5,18 +5,19 @@ const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser')
 const flash = require('connect-flash');
 const bcrypt = require('bcrypt');
+const cookieSession = require('cookie-session')
 // const hashedPassword = bcrypt.hashSync(password, 10);
 
 
 app.set("view engine", "ejs");
-app.use(cookieParser())
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(flash());
+app.use(cookieParser())
 
-// const urlDatabase = {
-//   "1234" : "http://www.lighthouselabs.ca",
-//   "2134" : "http://www.google.com"
-// };
 
 let users = {
     "userRandomID": {
@@ -51,18 +52,6 @@ const urlDatabase = {
     }
 }
 
-// for (let user in users){
-//   let usersURLDatabase = {
-//     users.userID: {
-//       "1234" : "http://www.lighthouselabs.ca",
-//       "2134" : "http://www.google.com"
-//     },
-//     users.userID: {
-//       "2134" : "http://www.google.com"
-//     }
-//   };
-// }
-
 
 //generate random number for URL ID
 function generateRandomString() {
@@ -94,11 +83,11 @@ app.get("/u/:shortURL", (request, response) => {
 
 //Show New URL Page
 app.get("/urls/new", (request, response) => {
-    var userCookie = request.cookies["user_IDCookie"];
+    var userCookie = request.session.user_id = "user_IDCookie";
     var user = users[userCookie];
     let templateVars = {
-        email: request.cookies["user_emailCookie"],
-        id: response.cookie["user_IDCookie"],
+        email: userCookie,
+        id: userCookie,
         user: user
     };
     response.render("urls_new", templateVars);
@@ -124,11 +113,11 @@ app.post("/urls/:shortURL/delete", (request, response) => {
 //update URL
 app.post("/urls/:shortURL", (request, response) => {
     let key = request.params.shortURL
-    var user_IDCookie = request.cookies["user_IDCookie"];
+    var userCookie = request.session.user_id = "user_IDCookie";
     var tempObject = {
         shortURL: key,
         longURL: request.body.longURL,
-        userId: user_IDCookie,
+        userId: userCookie,
         // urls: urlDatabase
     };
     urlDatabase[key] = tempObject;
@@ -178,8 +167,8 @@ app.post("/register", (request, response) => {
     //     response.status(400);
     else {
         users[key] = newUser
-        response.cookie('user_IDCookie', key)
-        response.redirect("/urls");
+        request.session.user_id = "user_IDCookie";
+        response.redirect("urls");
     }
     //users[key] = newUser;
     //response.cookie('user_emailCookie', email);
@@ -205,9 +194,8 @@ app.post("/login", (request, response) => {
         }
     }
     if (thisUser) {
-        console.log();
         if (bcrypt.compareSync(password, thisUser.password)) {
-            response.cookie('user_IDCookie', thisUser.id);
+            request.session.user_id;
             response.redirect("/urls");
         } else {
             response.status(401).send('There was a problem with your login, please try again.');
@@ -224,11 +212,11 @@ app.post("/login", (request, response) => {
 //logout
 app.post("/logout", (request, response) => {
     let templateVars = {
-        email: request.cookies["user_emailCookie"],
-        id: response.cookie["user_IDCookie"]
+        // email: request.session["user_emailCookie"],
+        id: request.session.user_id
     };
-    response.clearCookie('user_emailCookie');
-    response.clearCookie('user_IDCookie');
+    // response.clearCookie('user_emailCookie');
+    // response.clearCookie('user_IDCookie');
     //console.log(username)
     response.redirect("/register");
 });
@@ -238,7 +226,7 @@ app.post("/logout", (request, response) => {
 //take in string and post it to the URLdatabase object
 app.post("/urls", (request, response) => {
     let shortURL = generateRandomString();
-    var userCookie = request.cookies["user_IDCookie"];
+    var userCookie = request.session.user_id = "user_IDCookie";
     var tempObject = {
         shortURL: shortURL,
         longURL: request.body.longURL,
@@ -265,8 +253,9 @@ function getUserURL(user) {
 
 //get homepage
 app.get("/urls", (request, response) => {
-    var userCookie = request.cookies["user_IDCookie"];
+    var userCookie = request.session.user_id = "user_IDCookie";
     var user = users[userCookie];
+    var urls = urlDatabase;
     //console.log(userCookie)
     if (user) {
         var urls = getUserURL(user);
@@ -296,10 +285,8 @@ app.get("/urls", (request, response) => {
 //get detail page
 app.get("/urls/:id", (request, response) => {
     //console.log("in the /urls/:id get ");
-    var userCookie = request.cookies["user_IDCookie"];
+    var userCookie = request.session.user_id = "user_IDCookie";
     var user = users[userCookie];
-
-
 
     //console.log(user)
     if (user) {
