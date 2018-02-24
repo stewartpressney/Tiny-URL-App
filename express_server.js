@@ -20,48 +20,48 @@ app.use(flash());
 
 
 let users = {
-    "userRandomID": {
-        id: "4455",
-        email: "user@example.com",
-        password: "purple-monkey-dinosaur"
-    },
+  "userRandomID": {
+    id: "4455",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
 
-    "user2RandomID": {
-        id: "5544",
-        email: "user2@example.com",
-        password: "dishwasher-funk"
-    },
-    'k9we19': {
-        id: 'k9we19',
-        email: 'stew@stew.com',
-        password: '$2a$10$iYNOW.LiNLdlUuU3StE17eb5gTU.IjFON58e3.4eEmqdUJCqLfrnC'
-    }
+  "user2RandomID": {
+    id: "5544",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  },
+  'k9we19': {
+    id: 'k9we19',
+    email: 'stew@stew.com',
+    password: '$2a$10$iYNOW.LiNLdlUuU3StE17eb5gTU.IjFON58e3.4eEmqdUJCqLfrnC'
+  }
 }
 
 const urlDatabase = {
-    "1234": {
-        shortURL: "1234",
-        longURL: "http://www.lighthouselabs.ca",
-        userId: "userRandomID"
-    },
+  "1234": {
+    shortURL: "1234",
+    longURL: "http://www.lighthouselabs.ca",
+    userId: "userRandomID"
+  },
 
-    "2134": {
-        shortURL: "2134",
-        longURL: "http://www.google.com",
-        userId: "userRandomID"
-    }
+  "2134": {
+    shortURL: "2134",
+    longURL: "http://www.google.com",
+    userId: "userRandomID"
+  }
 }
 
 
 //generate random number for URL ID
 function generateRandomString() {
-    let tinyURL = "";
-    let possible = "0123456789abcdefghijklmnopqrstuvwxyz";
+  let tinyURL = "";
+  let possible = "0123456789abcdefghijklmnopqrstuvwxyz";
 
-    for (let i = 0; i < 6; i++)
-        tinyURL += possible.charAt(Math.floor(Math.random() * possible.length));
+  for (let i = 0; i < 6; i++)
+    tinyURL += possible.charAt(Math.floor(Math.random() * possible.length));
 
-    return tinyURL;
+  return tinyURL;
 }
 
 
@@ -69,13 +69,13 @@ function generateRandomString() {
 
 //map the long URL to the Short URL
 app.get("/u/:shortURL", (request, response) => {
-    // if (longURL[6] === '/'){
-    let longURL = urlDatabase[request.params.shortURL];
-    response.redirect(longURL);
-    // } else {
-    //     let longURL = 'http://' + urlDatabase[request.params.shortURL];
-    //     response.redirect(longURL);
-    // }
+  // if (longURL[6] === '/'){
+  let longURL = urlDatabase[request.params.shortURL];
+  response.redirect(longURL);
+  // } else {
+  //     let longURL = 'http://' + urlDatabase[request.params.shortURL];
+  //     response.redirect(longURL);
+  // }
 });
 
 
@@ -83,16 +83,16 @@ app.get("/u/:shortURL", (request, response) => {
 
 //Show New URL Page
 app.get("/urls/new", (request, response) => {
-    var userCookie = request.session.user_id; //this is not a complete object
-    //var user = userCookie.user;
-    var user = users[userCookie];
+  var userCookie = request.session.user_id; //this is not a complete object
+  //var user = userCookie.user;
+  var user = users[userCookie];
 
-    let templateVars = {
-        email: user.email,
-        id: user.id,
-        user: user
-    };
-    response.render("urls_new", templateVars);
+  let templateVars = {
+    email: user.email,
+    id: user.id,
+    user: user
+  };
+  response.render("urls_new", templateVars);
 });
 
 
@@ -101,12 +101,12 @@ app.get("/urls/new", (request, response) => {
 
 //delete URL
 app.post("/urls/:shortURL/delete", (request, response) => {
-    if (checkforUser()) {
-        delete urlDatabase[request.params.shortURL]
-        response.redirect("/urls");
-    } else {
-        res.send("Error, you cannot Access this URL");
-    }
+  if (checkforUser()) {
+    delete urlDatabase[request.params.shortURL]
+    response.redirect("/urls");
+  } else {
+    res.send("Error, you cannot Access this URL");
+  }
 });
 
 
@@ -114,84 +114,83 @@ app.post("/urls/:shortURL/delete", (request, response) => {
 
 //update URL
 app.post("/urls/:shortURL", (request, response) => {
-    let key = request.params.shortURL
-    var userCookie = request.session.user_id;
-    var user = users[userCookie];
-    var urls = getUserURL(user);
+  let key = request.params.shortURL
+  var userCookie = request.session.user_id;
+  var user = users[userCookie];
+  var urls = getUserURL(user);
 
-    var tempObject = {
-        shortURL: urls[key],
-        longURL: request.body.longURL,
-        user: user,
-        urls: urls
-    };
+  var tempObject = {
+    shortURL: urls[key],
+    longURL: request.body.longURL,
+    user: user,
+    urls: urls
+  };
 
 
-    console.log(request.params.shortURL)
-    urlDatabase[key].longURL = request.body.longURL;
-    var templateVars = {
+  console.log(request.params.shortURL)
+  urlDatabase[key].longURL = request.body.longURL;
+  var templateVars = {
 
-        user: user,
-        urls: urls
-    };
+    user: user,
+    urls: urls
+  };
 
-    //console.log(urlDatabase);
-    // urlDatabase[key] = request.body.longURL;
-    response.render('urls_index', templateVars);
+  //console.log(urlDatabase);
+  // urlDatabase[key] = request.body.longURL;
+  response.render('urls_index', templateVars);
 });
 
 
 //get registration page
 app.get("/register", (request, response) => {
-    response.render('register');
+  response.render('register');
 });
 
 
 function checkforUser(email) {
-    for (user in users) {
-        if (user.email === email) {
-            return (users[user]);
-        }
+  for (user in users) {
+    if (user.email === email) {
+      return (users[user]);
     }
+  }
 }
 
 //post registration info
 app.post("/register", (request, response) => {
-    let key = generateRandomString();
-    let email = request.body.email;
-    let password = request.body.password;
-    let hashedPassword = bcrypt.hashSync(password, 10);
-    let newUser = {
-        id: key,
-        email: request.body.email,
-        password: hashedPassword
-    };
-    //console.log(newUser)
-    for (var user in users) {}
-    const isUser = checkforUser(request.body.email)
-    // if (user.email !== email){
-    if (isUser) {
-        response.send('You Are Already Registered.');
-        response.status(400);
+  let key = generateRandomString();
+  let email = request.body.email;
+  let password = request.body.password;
+  let hashedPassword = bcrypt.hashSync(password, 10);
+  let newUser = {
+    id: key,
+    email: request.body.email,
+    password: hashedPassword
+  };
+  //console.log(newUser)
+  for (var user in users) {}
+  const isUser = checkforUser(request.body.email)
+  // if (user.email !== email){
+  if (isUser) {
+    response.send('You Are Already Registered.');
+    response.status(400);
+  }
+  if (request.body.email === "" || request.body.password === "") {
+    response.send('You Shall Not Pass -____-');
+    response.status(400);
+  } else {
+    let templateVars = {
+      urls: urlDatabase,
+      user: request.session.user_id
     }
-    if (request.body.email === "" || request.body.password === "") {
-        response.send('You Shall Not Pass -____-');
-        response.status(400);
-    }
-    else {
-      let templateVars = {
-        urls: urlDatabase,
-        user: request.session.user_id
-      }
-        users[key] = newUser
-        request.session.user_id = key;
-        response.redirect("/urls")
-        response.render(templateVars);
-    }
-    //users[key] = newUser;
-    //response.cookie('user_emailCookie', email);
+    users[key] = newUser
+    request.session.user_id = key;
+    response.redirect("/urls")
+    response.render(templateVars);
+  }
+  //users[key] = newUser;
+  //response.cookie('user_emailCookie', email);
 
-    //console.log(users, email, key, user, newUser)
+  //console.log(users, email, key, user, newUser)
 
 });
 
@@ -201,26 +200,26 @@ app.post("/register", (request, response) => {
 
 //login
 app.post("/login", (request, response) => {
-    let email = request.body.email;
-    let password = request.body.password;
-    let thisUser;   // starts as undefined because we haven't found our man/woman/creature/alien
-    for (let user_id in users) {
-        const verifyUser = users[user_id];
-        if (verifyUser.email === request.body.email) {
-            thisUser = verifyUser;
-            break;
-        }
+  let email = request.body.email;
+  let password = request.body.password;
+  let thisUser; // starts as undefined because we haven't found our man/woman/creature/alien
+  for (let user_id in users) {
+    const verifyUser = users[user_id];
+    if (verifyUser.email === request.body.email) {
+      thisUser = verifyUser;
+      break;
     }
-    if (thisUser) {
-        if (bcrypt.compareSync(password, thisUser.password)) {
-            request.session.user_id;
-            response.redirect("/urls");
-        } else {
-            response.status(401).send('There was a problem with your login, please try again.');
-        }
+  }
+  if (thisUser) {
+    if (bcrypt.compareSync(password, thisUser.password)) {
+      request.session.user_id;
+      response.redirect("/urls");
     } else {
-        response.status(401).send('There was a problem with your login, please try again.');
+      response.status(401).send('There was a problem with your login, please try again.');
     }
+  } else {
+    response.status(401).send('There was a problem with your login, please try again.');
+  }
 });
 
 
@@ -229,66 +228,66 @@ app.post("/login", (request, response) => {
 
 //logout
 app.post("/logout", (request, response) => {
-    let templateVars = {
-        // email: request.session["user_emailCookie"],
-        id: request.session.user_id
-    };
-    // response.clearCookie('user_emailCookie');
-    // response.clearCookie('user_IDCookie');
-    //console.log(username)
-    response.redirect("/register");
+  let templateVars = {
+    // email: request.session["user_emailCookie"],
+    id: request.session.user_id
+  };
+  // response.clearCookie('user_emailCookie');
+  // response.clearCookie('user_IDCookie');
+  //console.log(username)
+  response.redirect("/register");
 });
 
 
 
 //take in string and post it to the URLdatabase object
 app.post("/urls", (request, response) => {
-    let shortURL = generateRandomString();
-    var userCookie = request.session.user_id;
-    var user = users[userCookie];
+  let shortURL = generateRandomString();
+  var userCookie = request.session.user_id;
+  var user = users[userCookie];
 
-    var tempObject = {
-        shortURL: shortURL,
-        longURL: request.body.longURL,
-        userId: request.session.user_id,
-        //user: user
-        urls: urlDatabase//[key].url
-    };
-    urlDatabase[shortURL] = tempObject;
-    response.redirect(`urls/${shortURL}`);
+  var tempObject = {
+    shortURL: shortURL,
+    longURL: request.body.longURL,
+    userId: request.session.user_id,
+    //user: user
+    urls: urlDatabase //[key].url
+  };
+  urlDatabase[shortURL] = tempObject;
+  response.redirect(`urls/${shortURL}`);
 });
 
 
 function getUserURL(user) {
-    var output = {};
-    for (url in urlDatabase) {
-        let URL = urlDatabase[url]
-        if (user.id == URL.userId) {
-            output[url] = URL;
-        }
+  var output = {};
+  for (url in urlDatabase) {
+    let URL = urlDatabase[url]
+    if (user.id == URL.userId) {
+      output[url] = URL;
     }
-    return output;
+  }
+  return output;
 }
 
 
 //get homepage
 app.get("/urls", (request, response) => {
-    var userCookie = request.session.user_id;
-    var user = users[userCookie];
-    var urls = urlDatabase;
-    var templateVars;
-    //console.log(userCookie)
-    if (user) {
-        var urls = getUserURL(user);
-        //console.log('urls '+ urls)
-        templateVars = {
-            urls: urls,
-            user: user
-        };
-        response.render("urls_index", templateVars);
-    } else {
-        response.redirect("/register");
-    }
+  var userCookie = request.session.user_id;
+  var user = users[userCookie];
+  var urls = urlDatabase;
+  var templateVars;
+  //console.log(userCookie)
+  if (user) {
+    var urls = getUserURL(user);
+    //console.log('urls '+ urls)
+    templateVars = {
+      urls: urls,
+      user: user
+    };
+    response.render("urls_index", templateVars);
+  } else {
+    response.redirect("/register");
+  }
 });
 
 
@@ -296,49 +295,49 @@ app.get("/urls", (request, response) => {
 //get detail page
 app.get("/urls/:id", (request, response) => {
 
-    //READING THE COOKIE FROM THE BROWSER.
-    var userCookie = request.session.user_id;
-    //GET THE COMPLETE USER OBJECT FROM THE USERS DB WITH THE HELP OF COOKIE.
-    var user = users[userCookie];
-    var templateVars;
+  //READING THE COOKIE FROM THE BROWSER.
+  var userCookie = request.session.user_id;
+  //GET THE COMPLETE USER OBJECT FROM THE USERS DB WITH THE HELP OF COOKIE.
+  var user = users[userCookie];
+  var templateVars;
 
-    var flag = false;
-    //console.log(user)
-    if (user) { //if the user exists or logged in
-        for (var key in urlDatabase) {
-            if (urlDatabase[key].userId === user.id) {
-                flag = true;
-                //shortKey = key;
-                break;
-            }
-        } // for loop closes
-        if (flag) {
-            var tempObject = urlDatabase[request.params.id];
-            templateVars = {
-                //key: urlDatabase[key],
-                urls: tempObject,
-                shortURL: tempObject.shortURL,
-                longURL: tempObject.longURL,
-                user: user
-            };
-            response.render("urls_show", templateVars);
-        } else {
-            response.send("Error, you cannot Access this URL");
-        }
-    } else { // if the user is not logged in
-        templateVars = {
-                // urls: tempObject,
-
-                shortURL: tempObject.shortURL,
-                longURL: tempObject.longURL,
-                urls: urlDatabase,
-                user: ""
-        };
-        response.render("urls_index", templateVars)
+  var flag = false;
+  //console.log(user)
+  if (user) { //if the user exists or logged in
+    for (var key in urlDatabase) {
+      if (urlDatabase[key].userId === user.id) {
+        flag = true;
+        //shortKey = key;
+        break;
+      }
+    } // for loop closes
+    if (flag) {
+      var tempObject = urlDatabase[request.params.id];
+      templateVars = {
+        //key: urlDatabase[key],
+        urls: tempObject,
+        shortURL: tempObject.shortURL,
+        longURL: tempObject.longURL,
+        user: user
+      };
+      response.render("urls_show", templateVars);
+    } else {
+      response.send("Error, you cannot Access this URL");
     }
+  } else { // if the user is not logged in
+    templateVars = {
+      // urls: tempObject,
+
+      shortURL: tempObject.shortURL,
+      longURL: tempObject.longURL,
+      urls: urlDatabase,
+      user: ""
+    };
+    response.render("urls_index", templateVars)
+  }
 });
 
 
 app.listen(PORT, () => {
-    console.log(`Example App Docked at port ${PORT} Capt'n`);
+  console.log(`Example App Docked at port ${PORT} Capt'n`);
 });
