@@ -70,7 +70,9 @@ function generateRandomString() {
 //map the long URL to the Short URL
 app.get("/u/:shortURL", (request, response) => {
   // if (longURL[6] === '/'){
-  let longURL = urlDatabase[request.params.shortURL];
+  var urls = urlDatabase
+  var shortURL = request.params.shortURL;
+  var longURL = urls[shortURL].longURL;
   response.redirect(longURL);
   // } else {
   //     let longURL = 'http://' + urlDatabase[request.params.shortURL];
@@ -79,14 +81,10 @@ app.get("/u/:shortURL", (request, response) => {
 });
 
 
-
-
 //Show New URL Page
 app.get("/urls/new", (request, response) => {
-  var userCookie = request.session.user_id; //this is not a complete object
-  //var user = userCookie.user;
+  var userCookie = request.session.user_id;
   var user = users[userCookie];
-
   let templateVars = {
     email: user.email,
     id: user.id,
@@ -96,12 +94,9 @@ app.get("/urls/new", (request, response) => {
 });
 
 
-
-
-
 //delete URL
 app.post("/urls/:shortURL/delete", (request, response) => {
-    console.log("im in post delete");
+  console.log("im in post delete");
   if (checkforUser()) {
     delete urlDatabase[request.params.shortURL]
     response.redirect("/urls");
@@ -111,33 +106,23 @@ app.post("/urls/:shortURL/delete", (request, response) => {
 });
 
 
-
-
 //update URL
 app.post("/urls/:shortURL", (request, response) => {
   let key = request.params.shortURL
   var userCookie = request.session.user_id;
   var user = users[userCookie];
   var urls = getUserURL(user);
-
   var tempObject = {
     shortURL: urls[key],
     longURL: request.body.longURL,
     user: user,
     urls: urls
   };
-
-
-  console.log(request.params.shortURL)
   urlDatabase[key].longURL = request.body.longURL;
   var templateVars = {
-
     user: user,
     urls: urls
   };
-
-  //console.log(urlDatabase);
-  // urlDatabase[key] = request.body.longURL;
   response.render('urls_index', templateVars);
 });
 
@@ -156,6 +141,7 @@ function checkforUser(email) {
   }
 }
 
+
 //post registration info
 app.post("/register", (request, response) => {
   let key = generateRandomString();
@@ -167,10 +153,8 @@ app.post("/register", (request, response) => {
     email: request.body.email,
     password: hashedPassword
   };
-  //console.log(newUser)
   for (var user in users) {}
   const isUser = checkforUser(request.body.email)
-  // if (user.email !== email){
   if (isUser) {
     response.send('You Are Already Registered.');
     response.status(400);
@@ -188,23 +172,15 @@ app.post("/register", (request, response) => {
     response.redirect("/urls")
     response.render(templateVars);
   }
-  //users[key] = newUser;
-  //response.cookie('user_emailCookie', email);
-
-  //console.log(users, email, key, user, newUser)
-
 });
-
-
-//console.log(urlDatabase)
 
 
 //login
 app.post("/login", (request, response) => {
-  let email = request.body.email;
-  let password = request.body.password;
-  let thisUser; // starts as undefined because we haven't found our man/woman/creature/alien
-  for (let user_id in users) {
+  var email = request.body.email;
+  var password = request.body.password;
+  var thisUser; // starts as undefined because we haven't found our man/woman/creature/alien
+  for (var user_id in users) {
     const verifyUser = users[user_id];
     if (verifyUser.email === request.body.email) {
       thisUser = verifyUser;
@@ -213,7 +189,7 @@ app.post("/login", (request, response) => {
   }
   if (thisUser) {
     if (bcrypt.compareSync(password, thisUser.password)) {
-      request.session.user_id;
+      request.session.user_id = user_id;
       response.redirect("/urls");
     } else {
       response.status(401).send('There was a problem with your login, please try again.');
@@ -224,21 +200,11 @@ app.post("/login", (request, response) => {
 });
 
 
-
-
-
 //logout
 app.post("/logout", (request, response) => {
-  let templateVars = {
-    // email: request.session["user_emailCookie"],
-    id: request.session.user_id
-  };
-  // response.clearCookie('user_emailCookie');
-  // response.clearCookie('user_IDCookie');
-  //console.log(username)
+  request.session = null;
   response.redirect("/register");
 });
-
 
 
 //take in string and post it to the URLdatabase object
@@ -251,8 +217,7 @@ app.post("/urls", (request, response) => {
     shortURL: shortURL,
     longURL: request.body.longURL,
     userId: request.session.user_id,
-    //user: user
-    urls: urlDatabase //[key].url
+    urls: urlDatabase
   };
   urlDatabase[shortURL] = tempObject;
   response.redirect(`urls/${shortURL}`);
@@ -292,7 +257,6 @@ app.get("/urls", (request, response) => {
 });
 
 
-
 //get detail page
 app.get("/urls/:id", (request, response) => {
 
@@ -303,19 +267,16 @@ app.get("/urls/:id", (request, response) => {
   var templateVars;
 
   var flag = false;
-  //console.log(user)
-  if (user) { //if the user exists or logged in
+  if (user) {
     for (var key in urlDatabase) {
       if (urlDatabase[key].userId === user.id) {
         flag = true;
-        //shortKey = key;
         break;
       }
     } // for loop closes
     if (flag) {
       var tempObject = urlDatabase[request.params.id];
       templateVars = {
-        //key: urlDatabase[key],
         urls: tempObject,
         shortURL: tempObject.shortURL,
         longURL: tempObject.longURL,
@@ -325,9 +286,8 @@ app.get("/urls/:id", (request, response) => {
     } else {
       response.send("Error, you cannot Access this URL");
     }
-  } else { // if the user is not logged in
+  } else {
     templateVars = {
-      // urls: tempObject,
 
       shortURL: tempObject.shortURL,
       longURL: tempObject.longURL,
