@@ -24,7 +24,7 @@ This is the first full stack application I have ever made, though it has its kin
 - 2) Run the development web server using the `node express_server.js` command.
 - 3) Shrink Links and tweet away!
 
-!["Screenshot of User's Landing Page"](https://github.com/stewartpressney/Tiny-URL-App/blob/master/docs/Screen%20Shot%202018-03-02%20at%201.35.11%20PM.png?raw=true)
+!["Screenshot of User's Landing Page"](https://github.com/stewartpressney/Tiny-URL-App/blob/master/docs/Screen%20Shot%202018-03-02%20at%201.57.27%20PM.png?raw=true)
 
 
 !["Screenshot of Page to shorten links."](https://github.com/stewartpressney/Tiny-URL-App/blob/master/docs/Screen%20Shot%202018-03-02%20at%201.35.56%20PM.png?raw=true)
