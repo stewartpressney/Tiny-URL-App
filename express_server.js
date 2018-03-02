@@ -10,6 +10,7 @@ const cookieSession = require('cookie-session')
 
 
 app.set("view engine", "ejs");
+app.use(express.static('public'));
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
